@@ -1,0 +1,73 @@
+#/*
+# * Copyright 2022 CoreLayer BV
+# *
+# *    Licensed under the Apache License, Version 2.0 (the "License");
+# *    you may not use this file except in compliance with the License.
+# *    You may obtain a copy of the License at
+# *
+# *        http://www.apache.org/licenses/LICENSE-2.0
+# *
+# *    Unless required by applicable law or agreed to in writing, software
+# *    distributed under the License is distributed on an "AS IS" BASIS,
+# *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# *    See the License for the specific language governing permissions and
+# *    limitations under the License.
+# */
+name: stringmaps
+tags:
+sections:
+  - name: appexpert.stringmaps
+    elements:
+      - name: LBV_CONFIG
+        fields:
+          - id: name
+            data: <<prefix>>_LBV_CONFIG
+
+          - id: tcp_key
+            data: ("lbv=" + CLIENT.TCP.LB_VSERVER.NAME + ";").SET_TEXT_MODE(NOIGNORECASE)
+          - id: tcp_key_exists
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_key>>.IS_STRINGMAP_KEY("<<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/name>>")
+          - id: tcp_value
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_key>>.MAP_STRING("<<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/name>>").TYPECAST_NVLIST_T(';','=')
+          - id: tcp_value_state
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value>>.VALUE("state").SET_TEXT_MODE(NOIGNORECASE)
+          - id: tcp_value_state_is_enabled
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value_state>>.EQ("enabled")
+          - id: tcp_value_state_is_disabled
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value_state>>.EQ("disabled")
+          - id: tcp_value_state_is_maintenance
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value_state>>.EQ("maintenance")
+          - id: tcp_value_ipfilter
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value>>.VALUE("ipfilter").SET_TEXT_MODE(NOIGNORECASE)
+          - id: tcp_value_ipfilter_is_disabled
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value_ipfilter>>.EQ("disabled")
+          - id: tcp_value_ipfilter_is_block
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value_ipfilter>>.EQ("block")
+          - id: tcp_value_ipfilter_is_allow
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value_ipfilter>>.EQ("allow")
+
+          - id: udp_key
+            data: ("lbv=" + CLIENT.UDP.LB_VSERVER.NAME + ";").SET_TEXT_MODE(NOIGNORECASE)
+          - id: udp_key_exists
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_key>>.IS_STRINGMAP_KEY("<<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/name>>")
+          - id: udp_value
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_key>>.MAP_STRING("<<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/name>>").TYPECAST_NVLIST_T(';','=')
+          - id: udp_value_state
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_value>>.VALUE("state").SET_TEXT_MODE(NOIGNORECASE)
+          - id: udp_value_state_is_enabled
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_value_state>>.EQ("enabled")
+          - id: udp_value_state_is_disabled
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_value_state>>.EQ("disabled")
+          - id: udp_value_state_is_maintenance
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_value_state>>.EQ("maintenance")
+          - id: udp_value_ipfilter
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_value>>.VALUE("ipfilter").SET_TEXT_MODE(NOIGNORECASE)
+          - id: udp_value_ipfilter_is_disabled
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_value_ipfilter>>.EQ("disabled")
+          - id: udp_value_ipfilter_is_block
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_value_ipfilter>>.EQ("block")
+          - id: udp_value_ipfilter_is_allow
+            data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/udp_value_ipfilter>>.EQ("allow")
+        expressions:
+          install: add policy stringmap <<name>>
+          uninstall: rm policy stringmap <<name>>

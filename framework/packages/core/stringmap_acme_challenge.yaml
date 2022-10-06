@@ -1,0 +1,38 @@
+#/*
+# * Copyright 2022 CoreLayer BV
+# *
+# *    Licensed under the Apache License, Version 2.0 (the "License");
+# *    you may not use this file except in compliance with the License.
+# *    You may obtain a copy of the License at
+# *
+# *        http://www.apache.org/licenses/LICENSE-2.0
+# *
+# *    Unless required by applicable law or agreed to in writing, software
+# *    distributed under the License is distributed on an "AS IS" BASIS,
+# *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# *    See the License for the specific language governing permissions and
+# *    limitations under the License.
+# */
+name: stringmaps
+tags:
+sections:
+  - name: appexpert.stringmaps
+    elements:
+      - name: ACME_CHALLENGE
+        fields:
+          - id: name
+            data: <<prefix>>_ACME_CHALLENGE
+
+          - id: key
+            data: ("fqdn=" + HTTP.REQ.HOSTNAME + ";").SET_TEXT_MODE(NOIGNORECASE)
+          - id: key_exists
+            data: <<core.stringmaps.appexpert.stringmaps.ACME_CHALLENGE/key>>.IS_STRINGMAP_KEY("<<core.stringmaps.appexpert.stringmaps.ACME_CHALLENGE/name>>")
+          - id: value
+            data: <<core.stringmaps.appexpert.stringmaps.ACME_CHALLENGE/key>>.MAP_STRING("<<core.stringmaps.appexpert.stringmaps.ACME_CHALLENGE/name>>").TYPECAST_NVLIST_T(';','=')
+          - id: value_token
+            data: <<core.stringmaps.appexpert.stringmaps.ACME_CHALLENGE/value>>.VALUE("token").SET_TEXT_MODE(NOIGNORECASE)
+          - id: value_authorization
+            data: <<core.stringmaps.appexpert.stringmaps.ACME_CHALLENGE/value>>.VALUE("authorization").SET_TEXT_MODE(NOIGNORECASE)
+        expressions:
+          install: add policy stringmap <<name>>
+          uninstall: rm policy stringmap <<name>>
