@@ -23,28 +23,23 @@ import (
 	"log"
 )
 
-func GenerateServiceGroupBindings(protocol string) {
+func GenerateServiceGroups(protocol string) {
 	m := models.Module{
-		Name:     "servicegroups",
-		Tags:     nil,
-		Sections: nil,
+		Name: "servicegroups",
 	}
 
 	s := models.Section{
-		Name:     "trafficmanagement.loadbalancing.servicegroupbindings",
-		Elements: nil,
+		Name: "trafficmanagement.loadbalancing.servicegroups",
 	}
 
 	e := models.Element{
-		Name:   "DUMMY_" + protocol,
-		Tags:   nil,
-		Fields: nil,
+		Name: "DUMMY_" + protocol,
 		Expressions: models.Expression{
-			Install:   "bind servicegroup <<servicegroup>> <<server>> *",
-			Uninstall: "unbind servicegroup <<servicegroup>> <server>> *",
+			Install:   "add servicegroup <<name>> <<type>> -healthMonitor NO",
+			Uninstall: "rm servicegroup <<name>>",
 		},
 	}
-	e.Fields = append(e.Fields, generateServiceGroupBindingFields(protocol)...)
+	e.Fields = append(e.Fields, generateServiceGroupFields(protocol)...)
 	s.Elements = append(s.Elements, e)
 
 	m.Sections = append(m.Sections, s)
@@ -55,12 +50,11 @@ func GenerateServiceGroupBindings(protocol string) {
 	}
 
 	path := "framework/packages/core"
-	filename := "servicegroupbindings_" + protocol
+	filename := "servicegroup_" + protocol
 	shared.WriteToFile(path, filename, d)
-	//shared.AddFileToGit(path, filename)
 }
 
-func generateServiceGroupBindingFields(protocol string) []models.Field {
+func generateServiceGroupFields(protocol string) []models.Field {
 	output := make([]models.Field, 0)
 
 	output = append(output, models.Field{
@@ -69,13 +63,8 @@ func generateServiceGroupBindingFields(protocol string) []models.Field {
 	})
 
 	output = append(output, models.Field{
-		Id:   "servicegroup",
-		Data: "<<core.servicegroups.trafficmanagement.loadbalancing.servicegroups.DUMMY_" + protocol + "/name>",
-	})
-
-	output = append(output, models.Field{
-		Id:   "server",
-		Data: "<<core.servers.trafficmanagement.loadbalancing.servers.DUMMY/name>>",
+		Id:   "type",
+		Data: protocol,
 	})
 
 	return output

@@ -45,9 +45,8 @@ func GenerateContentSwitchingPoliciesIpCheck(elementName string, protocol string
 	}
 
 	path := "framework/packages/contentswitching"
-	filename := "policies_" + elementName + "_" + protocol + "_" + filterMode
+	filename := "policy_" + elementName + "_" + protocol + "_" + filterMode
 	shared.WriteToFile(path, filename, d)
-	//shared.AddFileToGit(path, filename)
 }
 
 func getContentSwitchingPolicyIpCheckFullName(elementName string, ipVersion string, protocol string, checkMode string, subnet string) string {

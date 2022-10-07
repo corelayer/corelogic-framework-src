@@ -43,9 +43,8 @@ func GenerateContentSwitchingPolicyLabelsIpCheck(elementName string, protocol st
 	}
 
 	path := "framework/packages/contentswitching"
-	filename := "labels_" + elementName + "_" + protocol
+	filename := "policylabel_" + elementName + "_" + protocol
 	shared.WriteToFile(path, filename, d)
-	//shared.AddFileToGit(path, filename)
 }
 
 func getContentSwitchingPolicyLabelIpCheckFullName(elementName string, protocol string) string {

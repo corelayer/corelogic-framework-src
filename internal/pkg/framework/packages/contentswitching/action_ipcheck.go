@@ -14,34 +14,44 @@
  *    limitations under the License.
  */
 
-package core
+package contentswitching
 
 import (
 	shared "github.com/corelayer/corelogic-framework-src/internal/pkg"
 	"github.com/corelayer/go-corelogic-framework-models/pkg/models"
 	"gopkg.in/yaml.v3"
 	"log"
+	"strings"
 )
 
-func GenerateServiceGroups(protocol string) {
+func GenerateContentSwitchingActionsIpCheck(elementName string, protocol string) {
 	m := models.Module{
-		Name: "servicegroups",
+		Name: "contentswitching",
 	}
 
 	s := models.Section{
-		Name: "trafficmanagement.loadbalancing.servicegroups",
+		Name: "trafficmanagement.contentswitching.actions",
 	}
 
 	e := models.Element{
-		Name: "DUMMY_" + protocol,
+		Name: getContentSwitchingActionIpCheckFullName(elementName, protocol),
 		Expressions: models.Expression{
-			Install:   "add servicegroup <<name>> <<type>> -healthMonitor NO",
-			Uninstall: "rm servicegroup <<name>>",
+			Install:   "add cs action <<name>> -targetVserverExpr <<expression>>",
+			Uninstall: "rm cs action <<name",
 		},
 	}
-	e.Fields = append(e.Fields, generateServiceGroupFields(protocol)...)
-	s.Elements = append(s.Elements, e)
 
+	e.Fields = append(e.Fields, models.Field{
+		Id:   "name",
+		Data: "<<prefix>>_" + getContentSwitchingActionIpCheckFullName(elementName, protocol),
+	})
+
+	e.Fields = append(e.Fields, models.Field{
+		Id:   "expression",
+		Data: "<<loadbalancing.trafficmanagement.loadbalancing.virtualservers." + getContentSwitchingActionIpCheckFullName(elementName, protocol) + "/name>>",
+	})
+
+	s.Elements = append(s.Elements, e)
 	m.Sections = append(m.Sections, s)
 
 	d, err := yaml.Marshal(&m)
@@ -49,24 +59,11 @@ func GenerateServiceGroups(protocol string) {
 		log.Fatal(err)
 	}
 
-	path := "framework/packages/core"
-	filename := "servicegroups_" + protocol
+	path := "framework/packages/contentswitching"
+	filename := "action_" + elementName + "_" + protocol
 	shared.WriteToFile(path, filename, d)
-	//shared.AddFileToGit(path, filename)
 }
 
-func generateServiceGroupFields(protocol string) []models.Field {
-	output := make([]models.Field, 0)
-
-	output = append(output, models.Field{
-		Id:   "name",
-		Data: "<<prefix>>_DUMMY_" + protocol,
-	})
-
-	output = append(output, models.Field{
-		Id:   "type",
-		Data: protocol,
-	})
-
-	return output
+func getContentSwitchingActionIpCheckFullName(elementName string, protocol string) string {
+	return elementName + "_" + strings.ToUpper(protocol)
 }

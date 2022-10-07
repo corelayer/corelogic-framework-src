@@ -84,7 +84,6 @@ func GenerateClientIpExpressions(ipVersion string) {
 	path := "framework/packages/core"
 	filename := "client_" + ipVersion
 	shared.WriteToFile(path, filename, d)
-	//shared.AddFileToGit(path, filename)
 }
 
 func getNsObjectForClientIP(ipVersion string) string {

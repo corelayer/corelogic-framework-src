@@ -63,7 +63,6 @@ func GenerateStringmapIpCheck(elementName string, nsObject string) {
 	path := "framework/packages/core"
 	filename := "stringmap_" + elementName
 	shared.WriteToFile(path, filename, d)
-	//shared.AddFileToGit(path, filename)
 }
 
 func generateStringmapIpCheckFields(elementName string, ipVersion string, protocol string, subnetLow int, subnetHigh int, nsObject string) []models.Field {

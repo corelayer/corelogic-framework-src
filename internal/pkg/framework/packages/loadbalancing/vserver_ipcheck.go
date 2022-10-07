@@ -62,5 +62,4 @@ func GenerateVserverIpCheck(elementName string, protocol string) {
 	path := "framework/packages/loadbalancing"
 	filename := "vserver_" + elementName + "_" + protocol
 	shared.WriteToFile(path, filename, d)
-	//shared.AddFileToGit(path, filename)
 }

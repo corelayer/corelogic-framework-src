@@ -60,7 +60,6 @@ func GenerateResponderIpCheck(elementName string, protocol string, nsObject stri
 	path := "framework/packages/responder"
 	filename := "responder_" + elementName + "_" + protocol
 	shared.WriteToFile(path, filename, d)
-	//shared.AddFileToGit(path, filename)
 }
 
 func generateStringmapIpCheckFields(elementName string, ipVersion string, protocol string, subnetLow int, subnetHigh int, nsObject string) []models.Field {
