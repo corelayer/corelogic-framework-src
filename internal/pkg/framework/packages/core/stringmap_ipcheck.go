@@ -25,7 +25,7 @@ import (
 	"strings"
 )
 
-func GenerateStringmapIpFilter(elementName string, nsObject string) {
+func GenerateStringmapIpCheck(elementName string, nsObject string) {
 	m := models.Module{
 		Name: "stringmaps",
 	}
@@ -47,10 +47,10 @@ func GenerateStringmapIpFilter(elementName string, nsObject string) {
 		Data: "<<prefix>>_" + elementName,
 	})
 
-	e.Fields = append(e.Fields, generateStringmapIpFilterFields("ipv4", "tcp", 1, 32, nsObject)...)
-	e.Fields = append(e.Fields, generateStringmapIpFilterFields("ipv6", "tcp", 1, 128, nsObject)...)
-	e.Fields = append(e.Fields, generateStringmapIpFilterFields("ipv4", "udp", 1, 32, nsObject)...)
-	e.Fields = append(e.Fields, generateStringmapIpFilterFields("ipv6", "udp", 1, 128, nsObject)...)
+	e.Fields = append(e.Fields, generateStringmapIpCheckFields(elementName, "ipv4", "tcp", 1, 32, nsObject)...)
+	e.Fields = append(e.Fields, generateStringmapIpCheckFields(elementName, "ipv6", "tcp", 1, 128, nsObject)...)
+	e.Fields = append(e.Fields, generateStringmapIpCheckFields(elementName, "ipv4", "udp", 1, 32, nsObject)...)
+	e.Fields = append(e.Fields, generateStringmapIpCheckFields(elementName, "ipv6", "udp", 1, 128, nsObject)...)
 
 	s.Elements = append(s.Elements, e)
 	m.Sections = append(m.Sections, s)
@@ -63,10 +63,10 @@ func GenerateStringmapIpFilter(elementName string, nsObject string) {
 	path := "framework/packages/core"
 	filename := "stringmap_" + elementName
 	shared.WriteToFile(path, filename, d)
-	shared.AddFileToGit(path, filename)
+	//shared.AddFileToGit(path, filename)
 }
 
-func generateStringmapIpFilterFields(ipVersion string, protocol string, subnetLow int, subnetHigh int, nsObject string) []models.Field {
+func generateStringmapIpCheckFields(elementName string, ipVersion string, protocol string, subnetLow int, subnetHigh int, nsObject string) []models.Field {
 	output := make([]models.Field, 0, subnetHigh)
 	for i := subnetHigh; i >= subnetLow; i-- {
 		subnet := fmt.Sprintf("%03d", i)
@@ -78,17 +78,17 @@ func generateStringmapIpFilterFields(ipVersion string, protocol string, subnetLo
 
 		output = append(output, models.Field{
 			Id:   strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_key_exists_" + subnet,
-			Data: "<<core.stringmaps.appexpert.stringmaps.CSV_IPFILTER/" + strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_key_" + subnet + ">>.IS_STRINGMAP_KEY(\"<<core.stringmaps.appexpert.stringmaps.CSV_IPFILTER/name>>\")",
+			Data: "<<core.stringmaps.appexpert.stringmaps." + elementName + "/" + strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_key_" + subnet + ">>.IS_STRINGMAP_KEY(\"<<core.stringmaps.appexpert.stringmaps." + elementName + "/name>>\")",
 		})
 
 		output = append(output, models.Field{
 			Id:   strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_value_" + subnet,
-			Data: "<<core.stringmaps.appexpert.stringmaps.CSV_IPFILTER/" + strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_key_" + subnet + ">>.MAP_STRING(\"<<core.stringmaps.appexpert.stringmaps.CSV_IPFILTER/name>>\").TYPECAST_NVLIST_T(';','=')",
+			Data: "<<core.stringmaps.appexpert.stringmaps." + elementName + "/" + strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_key_" + subnet + ">>.MAP_STRING(\"<<core.stringmaps.appexpert.stringmaps." + elementName + "/name>>\").TYPECAST_NVLIST_T(';','=')",
 		})
 
 		output = append(output, models.Field{
 			Id:   strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_value_description_" + subnet,
-			Data: "<<core.stringmaps.appexpert.stringmaps.CSV_IPFILTER/" + strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_value_" + subnet + ">>.VALUE(\"description\")",
+			Data: "<<core.stringmaps.appexpert.stringmaps." + elementName + "/" + strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_value_" + subnet + ">>.VALUE(\"description\")",
 		})
 	}
 

@@ -18,3 +18,4 @@
 output/
 .idea
 .DS_Store
+*.generated.yaml

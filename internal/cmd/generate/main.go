@@ -17,7 +17,9 @@
 package main
 
 import (
+	"github.com/corelayer/corelogic-framework-src/internal/pkg/framework/packages/contentswitching"
 	"github.com/corelayer/corelogic-framework-src/internal/pkg/framework/packages/core"
+	"github.com/corelayer/corelogic-framework-src/internal/pkg/framework/packages/loadbalancing"
 )
 
 func main() {
@@ -30,6 +32,64 @@ func main() {
 	core.GenerateServiceGroupBindings("TCP")
 	core.GenerateServiceGroups("UDP")
 	core.GenerateServiceGroupBindings("UDP")
-	core.GenerateStringmapIpFilter("CSV_IPFILTER", "CS_VSERVER")
-	core.GenerateStringmapIpFilter("LBV_IPFILTER", "LB_VSERVER")
+	core.GenerateStringmapIpCheck("CSV_IPFILTER", "CS_VSERVER")
+	core.GenerateStringmapIpCheck("CSV_IPZONE", "CS_VSERVER")
+	core.GenerateStringmapIpCheck("LBV_IPFILTER", "LB_VSERVER")
+
+	loadbalancing.GenerateVserverIpCheck("CSV_IPFILTER", "http")
+	loadbalancing.GenerateVserverIpCheck("CSV_IPFILTER", "tcp")
+	loadbalancing.GenerateVserverIpCheck("CSV_IPFILTER", "udp")
+
+	loadbalancing.GenerateVserverIpCheck("LBV_IPFILTER", "http")
+	loadbalancing.GenerateVserverIpCheck("LBV_IPFILTER", "tcp")
+	loadbalancing.GenerateVserverIpCheck("LBV_IPFILTER", "udp")
+
+	contentswitching.GenerateContentSwitchingActionsIpCheck("CSV_IPFILTER", "http")
+	contentswitching.GenerateContentSwitchingActionsIpCheck("CSV_IPFILTER", "tcp")
+	contentswitching.GenerateContentSwitchingActionsIpCheck("CSV_IPFILTER", "udp")
+
+	contentswitching.GenerateContentSwitchingActionsIpCheck("LBV_IPFILTER", "http")
+	contentswitching.GenerateContentSwitchingActionsIpCheck("LBV_IPFILTER", "tcp")
+	contentswitching.GenerateContentSwitchingActionsIpCheck("LBV_IPFILTER", "udp")
+
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("CSV_IPFILTER", "http", "tcp", "allow")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("CSV_IPFILTER", "tcp", "tcp", "allow")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("CSV_IPFILTER", "udp", "udp", "allow")
+
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("CSV_IPFILTER", "http", "tcp", "block")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("CSV_IPFILTER", "tcp", "tcp", "block")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("CSV_IPFILTER", "udp", "udp", "block")
+
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("CSV_IPZONE", "http", "tcp", "lan")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("CSV_IPZONE", "tcp", "tcp", "lan")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("CSV_IPZONE", "udp", "udp", "lan")
+
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("LBV_IPFILTER", "http", "tcp", "allow")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("LBV_IPFILTER", "tcp", "tcp", "allow")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("LBV_IPFILTER", "udp", "udp", "allow")
+
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("LBV_IPFILTER", "http", "tcp", "block")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("LBV_IPFILTER", "tcp", "tcp", "block")
+	contentswitching.GenerateContentSwitchingPoliciesIpCheck("LBV_IPFILTER", "udp", "udp", "block")
+
+	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("CSV_IPFILTER", "http")
+	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("CSV_IPFILTER", "tcp")
+	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("CSV_IPFILTER", "udp")
+
+	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("CSV_IPZONE", "http")
+	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("CSV_IPZONE", "tcp")
+	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("CSV_IPZONE", "udp")
+
+	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("LBV_IPFILTER", "http")
+	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("LBV_IPFILTER", "tcp")
+	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("LBV_IPFILTER", "udp")
+
+	//responder.GenerateResponderIpCheck("CSV_IPFILTER", "http", "CS_VSERVER")
+	//responder.GenerateResponderIpCheck("CSV_IPFILTER", "tcp", "CS_VSERVER")
+	//responder.GenerateResponderIpCheck("CSV_IPFILTER", "udp", "CS_VSERVER")
+	//
+	//responder.GenerateResponderIpCheck("LBV_IPFILTER", "http", "LB_VSERVER")
+	//responder.GenerateResponderIpCheck("LBV_IPFILTER", "tcp", "LB_VSERVER")
+	//responder.GenerateResponderIpCheck("LBV_IPFILTER", "udp", "LB_VSERVER")
+
 }

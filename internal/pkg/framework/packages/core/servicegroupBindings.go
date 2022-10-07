@@ -57,7 +57,7 @@ func GenerateServiceGroupBindings(protocol string) {
 	path := "framework/packages/core"
 	filename := "servicegroupbindings_" + protocol
 	shared.WriteToFile(path, filename, d)
-	shared.AddFileToGit(path, filename)
+	//shared.AddFileToGit(path, filename)
 }
 
 func generateServiceGroupBindingFields(protocol string) []models.Field {

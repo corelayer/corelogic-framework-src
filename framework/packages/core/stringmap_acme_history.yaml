@@ -22,7 +22,6 @@ sections:
         fields:
           - id: name
             data: <<prefix>>_ACME_HISTORY
-
           - id: key
             data: ("fqdn=" + HTTP.REQ.HOSTNAME + ";").SET_TEXT_MODE(NOIGNORECASE)
           - id: key_exists

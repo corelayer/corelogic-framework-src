@@ -14,34 +14,44 @@
  *    limitations under the License.
  */
 
-package core
+package loadbalancing
 
 import (
 	shared "github.com/corelayer/corelogic-framework-src/internal/pkg"
 	"github.com/corelayer/go-corelogic-framework-models/pkg/models"
 	"gopkg.in/yaml.v3"
 	"log"
+	"strings"
 )
 
-func GenerateServiceGroups(protocol string) {
+func GenerateVserverIpCheck(elementName string, protocol string) {
 	m := models.Module{
-		Name: "servicegroups",
+		Name: "loadbalancing",
 	}
 
 	s := models.Section{
-		Name: "trafficmanagement.loadbalancing.servicegroups",
+		Name: "trafficmanagement.loadbalancing.virtualservers",
 	}
 
 	e := models.Element{
-		Name: "DUMMY_" + protocol,
+		Name: elementName + "_" + strings.ToUpper(protocol),
 		Expressions: models.Expression{
-			Install:   "add servicegroup <<name>> <<type>> -healthMonitor NO",
-			Uninstall: "rm servicegroup <<name>>",
+			Install:   "add lb vserver <<name>> <<protocol>> 0.0.0.0 0",
+			Uninstall: "rm lb vserver <<name>>",
 		},
 	}
-	e.Fields = append(e.Fields, generateServiceGroupFields(protocol)...)
-	s.Elements = append(s.Elements, e)
 
+	e.Fields = append(e.Fields, models.Field{
+		Id:   "name",
+		Data: "<<prefix>>_" + elementName + "_" + strings.ToUpper(protocol),
+	})
+
+	e.Fields = append(e.Fields, models.Field{
+		Id:   "protocol",
+		Data: strings.ToUpper(protocol),
+	})
+
+	s.Elements = append(s.Elements, e)
 	m.Sections = append(m.Sections, s)
 
 	d, err := yaml.Marshal(&m)
@@ -49,24 +59,8 @@ func GenerateServiceGroups(protocol string) {
 		log.Fatal(err)
 	}
 
-	path := "framework/packages/core"
-	filename := "servicegroups_" + protocol
+	path := "framework/packages/loadbalancing"
+	filename := "vserver_" + elementName + "_" + protocol
 	shared.WriteToFile(path, filename, d)
 	//shared.AddFileToGit(path, filename)
-}
-
-func generateServiceGroupFields(protocol string) []models.Field {
-	output := make([]models.Field, 0)
-
-	output = append(output, models.Field{
-		Id:   "name",
-		Data: "<<prefix>>_DUMMY_" + protocol,
-	})
-
-	output = append(output, models.Field{
-		Id:   "type",
-		Data: protocol,
-	})
-
-	return output
 }

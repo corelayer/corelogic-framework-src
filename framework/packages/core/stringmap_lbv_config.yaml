@@ -22,7 +22,6 @@ sections:
         fields:
           - id: name
             data: <<prefix>>_LBV_CONFIG
-
           - id: tcp_key
             data: ("lbv=" + CLIENT.TCP.LB_VSERVER.NAME + ";").SET_TEXT_MODE(NOIGNORECASE)
           - id: tcp_key_exists
@@ -45,7 +44,6 @@ sections:
             data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value_ipfilter>>.EQ("block")
           - id: tcp_value_ipfilter_is_allow
             data: <<core.stringmaps.appexpert.stringmaps.LBV_CONFIG/tcp_value_ipfilter>>.EQ("allow")
-
           - id: udp_key
             data: ("lbv=" + CLIENT.UDP.LB_VSERVER.NAME + ";").SET_TEXT_MODE(NOIGNORECASE)
           - id: udp_key_exists

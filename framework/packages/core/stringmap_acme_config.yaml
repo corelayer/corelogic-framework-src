@@ -22,7 +22,6 @@ sections:
         fields:
           - id: name
             data: <<prefix>>_ACME_CONFIG
-
           - id: key
             data: ("fqdn=" + HTTP.REQ.HOSTNAME + ";").SET_TEXT_MODE(NOIGNORECASE)
           - id: key_exists
@@ -49,6 +48,8 @@ sections:
             data: <<core.stringmaps.appexpert.stringmaps.ACME_CONFIG/value_challenge_type>>.EQ("http")
           - id: value_challenge_type_is_dns
             data: <<core.stringmaps.appexpert.stringmaps.ACME_CONFIG/value_challenge_type>>.EQ("dns")
+          - id: value_challenge_provider
+            data: <<core.stringmaps.appexpert.stringmaps.ACME_CONFIG/value>>.VALUE("challenge_provider").SET_TEXT_MODE(NOIGNORECASE)
         expressions:
           install: add policy stringmap <<name>>
           uninstall: rm policy stringmap <<name>>

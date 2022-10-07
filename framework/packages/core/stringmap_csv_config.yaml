@@ -22,7 +22,6 @@ sections:
         fields:
           - id: name
             data: <<prefix>>_CSV_CONFIG
-
           - id: tcp_key
             data: ("csv=" + CLIENT.TCP.CS_VSERVER.NAME + ";").SET_TEXT_MODE(NOIGNORECASE)
           - id: tcp_key_exists
@@ -45,7 +44,6 @@ sections:
             data: <<core.stringmaps.appexpert.stringmaps.CSV_CONFIG/tcp_value_ipfilter>>.EQ("block")
           - id: tcp_value_ipfilter_is_allow
             data: <<core.stringmaps.appexpert.stringmaps.CSV_CONFIG/tcp_value_ipfilter>>.EQ("allow")
-
           - id: udp_key
             data: ("csv=" + CLIENT.UDP.CS_VSERVER.NAME + ";").SET_TEXT_MODE(NOIGNORECASE)
           - id: udp_key_exists

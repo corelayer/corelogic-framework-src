@@ -17,10 +17,8 @@
 package shared
 
 import (
-	"errors"
 	"log"
 	"os"
-	"os/exec"
 	"strings"
 )
 
@@ -34,6 +32,12 @@ func printCopyright() string {
 }
 
 func WriteToFile(path string, fileName string, data []byte) {
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			os.Mkdir(path, 0755)
+		}
+	}
+
 	f, err := os.Create(path + "/" + strings.ToLower(getFileNameWithExtension(fileName)))
 	if err != nil {
 		log.Fatal(err)
@@ -48,17 +52,16 @@ func WriteToFile(path string, fileName string, data []byte) {
 
 }
 
-func AddFileToGit(path string, fileName string) {
-	runPath, err := exec.LookPath("git")
-	if errors.Is(err, exec.ErrNotFound) {
-		log.Fatal("ErrNotFount", err)
-	}
-	if err != nil {
-		log.Fatal("Other error", err)
-	}
-	cmd := exec.Command(runPath, "add", path+"/"+strings.ToLower(getFileNameWithExtension(fileName)))
-	if err = cmd.Run(); err != nil {
-		log.Fatal("Exe error", err)
-	}
-
-}
+//func AddFileToGit(path string, fileName string) {
+//	runPath, err := exec.LookPath("git")
+//	if errors.Is(err, exec.ErrNotFound) {
+//		log.Fatal("ErrNotFount", err)
+//	}
+//	if err != nil {
+//		log.Fatal("Other error", err)
+//	}
+//	cmd := exec.Command(runPath, "add", path+"/"+strings.ToLower(getFileNameWithExtension(fileName)))
+//	if err = cmd.Run(); err != nil {
+//		log.Fatal("Exe error", err)
+//	}
+//}
