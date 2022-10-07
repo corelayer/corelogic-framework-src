@@ -45,7 +45,7 @@ func GenerateContentSwitchingPolicyLabelBindingsIpCheck(elementName string, prot
 	}
 
 	path := "framework/packages/contentswitching"
-	filename := "policylabelbindings_" + elementName + "_" + protocol + "_" + checkMode
+	filename := "policylabelbinding_" + elementName + "_" + protocol + "_" + checkMode
 	shared.WriteToFile(path, filename, d)
 }
 
@@ -53,12 +53,23 @@ func generateContentSwitchingPolicyLabelBindingsIpCheckFullName(elementName stri
 	return elementName + "_" + strings.ToUpper(ipVersion) + "_" + strings.ToUpper(protocol) + "_" + strings.ToUpper(checkMode) + "_" + subnet
 }
 
+func generateReverseSubnetNumberForCidr(i int, ipVersion string) string {
+	var output string
+	switch ipVersion {
+	case "ipv4":
+		output = fmt.Sprintf("%03d", 33-i)
+	case "ipv6":
+		output = fmt.Sprintf("%03d", 129-i)
+	}
+	return output
+}
+
 func generateContentSwitchingPolicyLabelBindingsIpCheckElementsPerIpVersion(elementName string, ipVersion string, protocol string, baseProtocol string, subnetLow int, subnetHigh int, checkMode string, priorityPrefix string) []models.Element {
 	output := make([]models.Element, 0, subnetHigh)
 
 	for i := subnetHigh; i >= subnetLow; i-- {
 		subnet := fmt.Sprintf("%03d", i)
-
+		priority := fmt.Sprintf("%s%s%s", priorityPrefix, strings.TrimPrefix(ipVersion, "ipv"), generateReverseSubnetNumberForCidr(i, ipVersion))
 		e := models.Element{
 			Name: generateContentSwitchingPolicyLabelBindingsIpCheckFullName(elementName, ipVersion, protocol, checkMode, subnet),
 		}
@@ -70,21 +81,21 @@ func generateContentSwitchingPolicyLabelBindingsIpCheckElementsPerIpVersion(elem
 				Uninstall: "unbind cs policylabel <<labelname>>",
 			}
 
-			e.Fields = append(e.Fields, generateContentSwitchingPolicyLabelBindingsIpCheckFields(elementName, "ipv4", protocol, baseProtocol, checkMode, subnet, priorityPrefix)...)
+			e.Fields = append(e.Fields, generateContentSwitchingPolicyLabelBindingsIpCheckFields(elementName, "ipv4", protocol, baseProtocol, checkMode, subnet, priority)...)
 		case "allow":
 			e.Expressions = models.Expression{
-				Install:   "bind cs policylabel <<labelname>> <<policyname>> <<priority>>",
+				Install:   "bind cs policylabel <<labelname>> <<policyname>> <<priority>> -gotoPriorityExpression <<gotoPriority>>",
 				Uninstall: "unbind cs policylabel <<labelname>>",
 			}
 
-			e.Fields = append(e.Fields, generateContentSwitchingPolicyLabelBindingsIpCheckFields(elementName, "ipv4", protocol, baseProtocol, checkMode, subnet, priorityPrefix)...)
+			e.Fields = append(e.Fields, generateContentSwitchingPolicyLabelBindingsIpCheckFields(elementName, "ipv4", protocol, baseProtocol, checkMode, subnet, priority)...)
 		case "lan":
 			e.Expressions = models.Expression{
 				Install:   "bind cs policylabel <<labelname>> <<policyname>> <<priority>>",
 				Uninstall: "unbind cs policylabel <<labelname>>",
 			}
 
-			e.Fields = append(e.Fields, generateContentSwitchingPolicyLabelBindingsIpCheckFields(elementName, "ipv4", protocol, baseProtocol, checkMode, subnet, priorityPrefix)...)
+			e.Fields = append(e.Fields, generateContentSwitchingPolicyLabelBindingsIpCheckFields(elementName, "ipv4", protocol, baseProtocol, checkMode, subnet, priority)...)
 		}
 
 		output = append(output, e)
@@ -110,10 +121,10 @@ func generateContentSwitchingPolicyLabelBindingsIpCheckFields(elementName string
 		Data: priority,
 	})
 
-	if checkMode == "block" {
+	if checkMode == "allow" {
 		output = append(output, models.Field{
-			Id:   "action",
-			Data: "<<contentswitching.trafficmanagement.contentswitching.actions." + elementName + "_" + strings.ToUpper(protocol) + "/name>>",
+			Id:   "gotoPriority",
+			Data: priority,
 		})
 	}
 

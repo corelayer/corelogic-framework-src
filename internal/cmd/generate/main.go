@@ -85,6 +85,7 @@ func main() {
 	contentswitching.GenerateContentSwitchingPolicyLabelsIpCheck("LBV_IPFILTER", "udp")
 
 	contentswitching.GenerateContentSwitchingPolicyLabelBindingsIpCheck("CSV_IPFILTER", "http", "tcp", "allow", "101")
+	contentswitching.GenerateContentSwitchingPolicyLabelBindingsIpCheck("CSV_IPFILTER", "http", "tcp", "block", "101")
 
 	//responder.GenerateResponderIpCheck("CSV_IPFILTER", "http", "CS_VSERVER")
 	//responder.GenerateResponderIpCheck("CSV_IPFILTER", "tcp", "CS_VSERVER")
