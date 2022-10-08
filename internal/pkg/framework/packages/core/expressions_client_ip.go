@@ -28,7 +28,7 @@ import (
 
 func GenerateClientIpExpressions(ipVersion string) {
 	m := models.Module{
-		Name: "core",
+		Name: "clientip",
 	}
 
 	s := models.Section{
@@ -58,7 +58,7 @@ func GenerateClientIpExpressions(ipVersion string) {
 	})
 	eSrcIsIpVersion.Fields = append(eSrcIsIpVersion.Fields, models.Field{
 		Id:   "data",
-		Data: "<<core.placeholders.appexpert.expressions.advanced.CLIENT_SRC_" + strings.ToUpper(ipVersion) + "/data>>.IS_" + strings.ToUpper(getOtherIpVersion(ipVersion)) + ".NOT",
+		Data: "<<core.appexpert.expressions.advanced.CLIENT_SRC_" + strings.ToUpper(ipVersion) + "/data>>.IS_" + strings.ToUpper(getOtherIpVersion(ipVersion)) + ".NOT",
 	})
 	s.Elements = append(s.Elements, eSrcIsIpVersion)
 
@@ -118,12 +118,12 @@ func generateClientIpFields(ipVersion string, subnetLow int, subnetHigh int) []m
 		if i == subnetHigh {
 			output = append(output, models.Field{
 				Id:   subnet,
-				Data: "<<core.placeholders.appexpert.expressions.advanced.CLIENT_SRC_" + strings.ToUpper(ipVersion) + "/data>>.TYPECAST_TEXT_T + \"/" + strconv.Itoa(i) + "\"",
+				Data: "<<core.clientip.appexpert.expressions.advanced.CLIENT_SRC_" + strings.ToUpper(ipVersion) + "/data>>.TYPECAST_TEXT_T + \"/" + strconv.Itoa(i) + "\"",
 			})
 		} else {
 			output = append(output, models.Field{
 				Id:   subnet,
-				Data: "<<core.placeholders.appexpert.expressions.advanced.CLIENT_SRC_" + strings.ToUpper(ipVersion) + "/data>>.SUBNET(" + strconv.Itoa(i) + ").TYPECAST_TEXT_T + \"/" + strconv.Itoa(i) + "\"",
+				Data: "<<core.clientip.appexpert.expressions.advanced.CLIENT_SRC_" + strings.ToUpper(ipVersion) + "/data>>.SUBNET(" + strconv.Itoa(i) + ").TYPECAST_TEXT_T + \"/" + strconv.Itoa(i) + "\"",
 			})
 		}
 	}

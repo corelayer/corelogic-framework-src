@@ -72,7 +72,7 @@ func generateStringmapIpCheckFields(elementName string, ipVersion string, protoc
 
 		output = append(output, models.Field{
 			Id:   strings.ToLower(ipVersion) + "_" + strings.ToLower(protocol) + "_key_" + subnet,
-			Data: "(\"csv=\" + CLIENT." + strings.ToUpper(protocol) + "." + nsObject + ".NAME + \";address=\" + <<core.placeholders.appexpert.expressions.advanced.CLIENT_SRC_" + strings.ToUpper(ipVersion) + "_SUBNET/" + subnet + ">> + \";\").SET_TEXT_MODE(NOIGNORECASE)",
+			Data: "(\"csv=\" + CLIENT." + strings.ToUpper(protocol) + "." + nsObject + ".NAME + \";address=\" + <<core.clientip.appexpert.expressions.advanced.CLIENT_SRC_" + strings.ToUpper(ipVersion) + "_SUBNET/" + subnet + ">> + \";\").SET_TEXT_MODE(NOIGNORECASE)",
 		})
 
 		output = append(output, models.Field{

@@ -19,10 +19,8 @@ package main
 import (
 	"fmt"
 	"github.com/corelayer/go-corelogic-framework-models/pkg/controllers"
-	"github.com/corelayer/go-corelogic-framework-models/pkg/models"
 	"log"
 	"sort"
-	"time"
 )
 
 func main() {
@@ -36,41 +34,25 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	elementKeys := make([]string, 0)
+	elementKeys := make([]string, len(elements))
 	for key := range elements {
 		elementKeys = append(elementKeys, key)
 	}
 	sort.Strings(elementKeys)
-
 	for _, key := range elementKeys {
-		fmt.Println(key, elements[key].Name)
+		fmt.Println(key, elements[key])
 	}
 	fmt.Println("-----------------------------")
-	time.Sleep(1 * time.Second)
-
-	fields, err := f.GetFields()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	prefixes, err := f.GetPrefixes()
-	if err != nil {
-		log.Fatal(err)
-	}
-	for k, v := range prefixes {
-		fmt.Println(k, v)
-	}
-	fields = models.UnfoldFields(fields, prefixes)
-
-	fieldKeys := make([]string, 0)
-	for key := range fields {
-		fieldKeys = append(fieldKeys, key)
-	}
-	sort.Strings(fieldKeys)
-
-	for _, key := range fieldKeys {
-		fmt.Println(key, fields[key])
-	}
-	fmt.Println("-----------------------------")
+	//fields, err := f.GetFields()
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//fieldKeys := make([]string, len(fields))
+	//for key := range fields {
+	//	fieldKeys = append(fieldKeys, key)
+	//}
+	//sort.Strings(fieldKeys)
+	//for _, key := range fieldKeys {
+	//	fmt.Println(key, fields[key])
+	//}
 }

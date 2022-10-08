@@ -20,6 +20,9 @@ build:
 clean:
 	sh scripts/clean.sh
 
+compile:
+	./output/compile
+
 #coverage:
 #	sh scripts/coverage.sh
 
